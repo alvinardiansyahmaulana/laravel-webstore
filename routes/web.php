@@ -16,3 +16,25 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::group([
+    'prefix' => 'dashboard',
+    'as' => 'dashboard.',
+    'middleware' => ['auth']
+], function () {
+    Route::get('/', function () {
+        return view('dashboard');
+    })->name('index');
+
+    Route::group([
+        'prefix' => 'product',
+        'as' => 'product.',
+        'namespace' => '\App\Http\Livewire\Product'
+    ], function () {
+        Route::get('/', IndexProduct::class)->name('index');
+        Route::get('/create', CreateProduct::class)->name('create');
+        Route::get('/edit/{product}', EditProduct::class)->name('edit');
+    });
+});
+
+require __DIR__.'/auth.php';
